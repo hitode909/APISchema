@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use parent qw(Plack::Middleware);
-use Plack::Util::Accessor qw(schema validator);
+use Plack::Util::Accessor qw(schema validator status_code);
 use Plack::Request;
 use APISchema::Generator::Router::Simple;
 use APISchema::Validator;
@@ -32,8 +32,9 @@ sub call {
     }, $self->schema);
 
     my $errors = $result->errors;
+    my $status_code = $self->status_code // 400;
     return [
-        400,
+        $status_code,
         [ 'Content-Type' => 'application/json' ],
         [ encode_json($errors) ],
     ] if scalar keys %$errors;
