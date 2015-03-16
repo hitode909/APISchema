@@ -114,6 +114,31 @@ sub request_validator : Tests {
         }
     };
 
+    subtest 'when invalid request (with explicit error status code)' => sub {
+        my $middleware_with_status_code = Plack::Middleware::APISchema::RequestValidator->new(schema => $schema, status_code => 422);
+        $middleware_with_status_code->wrap(sub {
+            [200, [ 'Content-Type' => 'text/plain' ], [ 'dummy' ]  ]
+        });
+        test_psgi $middleware_with_status_code => sub {
+            my $server = shift;
+            my $res = $server->(
+                POST '/bmi',
+                Content_Type => 'application/json',
+                Content => encode_json({}),
+            );
+            is $res->code, 422;
+            cmp_deeply $res->content, json({
+                body => {
+                    attribute => 'Valiemon::Attributes::Required',
+                    position => '/$ref/required',
+                    message => "Contents do not match resource 'figure'",
+                    encoding => 'json',
+                },
+            });
+            done_testing;
+        }
+    };
+
     subtest 'other endpoints are not affected' => sub {
         test_psgi $middleware => sub {
             my $server = shift;
