@@ -88,5 +88,8 @@
       }
    },
    "version" : "0.01",
-   "x_authority" : "cpan:HITODE"
+   "x_authority" : "cpan:HITODE",
+   "x_contributors" : [
+      "aereal <aereal@aereal.org>"
+   ]
 }
