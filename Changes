@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+0.02 2015-03-16T02:35:36Z
+    - Add a status_code parameter to P::MW::AS::RequestValidator
+
 0.01 2015-02-18T10:41:05Z
 
     - original version

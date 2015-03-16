@@ -87,7 +87,7 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "aereal <aereal@aereal.org>"
