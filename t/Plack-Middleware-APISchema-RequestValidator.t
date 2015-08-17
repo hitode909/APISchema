@@ -108,6 +108,8 @@ sub request_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'figure'",
                     encoding => 'json',
+                    actual => {},
+                    expected => $schema->get_resource_by_name('figure')->definition,
                 },
             });
             done_testing;
@@ -133,6 +135,8 @@ sub request_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'figure'",
                     encoding => 'json',
+                    actual => {},
+                    expected => $schema->get_resource_by_name('figure')->definition,
                 },
             });
             done_testing;
@@ -182,6 +186,10 @@ sub request_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'figure'",
                     encoding => 'url_parameter',
+                    actual => {
+                        "{\"weight\":50,\"height\":1.6}" => undef,
+                    },
+                    expected => $schema->get_resource_by_name('figure')->definition,
                 },
             });
             done_testing;
@@ -243,6 +251,10 @@ sub request_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'figure'",
                     encoding => 'url_parameter',
+                    actual => {
+                        weight => 50,
+                    },
+                    expected => $schema->get_resource_by_name('figure')->definition,
                 },
             });
             done_testing;
@@ -276,6 +288,13 @@ sub request_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'figure_header'",
                     encoding => 'perl',
+                    actual => {
+                        content_length => 0,
+                        x_weight       => 50,
+                        content_type   => "application/x-www-form-urlencoded",
+                        host           => "localhost",
+                    },
+                    expected => $schema->get_resource_by_name('figure_header')->definition,
                 },
             });
             done_testing;
