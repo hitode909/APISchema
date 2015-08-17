@@ -87,6 +87,8 @@ sub response_validator : Tests {
                 body => {
                     attribute => "Valiemon::Attributes::Type",
                     position => '/$ref/properties/value/type',
+                    expected => $schema->get_resource_by_name('bmi')->definition->{properties}->{value},
+                    actual => 'aaa',
                     message => "Contents do not match resource 'bmi'",
                     encoding => 'json',
                 },
@@ -142,6 +144,10 @@ sub response_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'bmi'",
                     encoding => 'url_parameter',
+                    actual => {
+                        '{"value":19.5}' => undef,
+                    },
+                    expected => $schema->get_resource_by_name('bmi')->definition,
                 },
             });
             done_testing;
@@ -208,6 +214,11 @@ sub response_validator : Tests {
                     position => '/$ref/required',
                     message => "Contents do not match resource 'bmi_header'",
                     encoding => 'perl',
+                    expected => $schema->get_resource_by_name('bmi_header')->definition,
+                    actual => {
+                        content_type => "application/json",
+                        "x_foo" => 1,
+                    },
                 },
             });
             done_testing;

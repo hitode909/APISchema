@@ -4,7 +4,7 @@
       "hitode909 <hitode909@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.142690",
+   "generated_by" : "Minilla/v2.4.1, CPAN::Meta::Converter version 2.142690",
    "license" : [
       "perl_5"
    ],
@@ -59,7 +59,7 @@
             "Text::MicroTemplate::Extended" : "0",
             "URI::Escape" : "0",
             "URL::Encode" : "0",
-            "Valiemon" : "0",
+            "Valiemon" : "0.03",
             "perl" : "5.008001"
          }
       },

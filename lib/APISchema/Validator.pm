@@ -79,6 +79,8 @@ sub _validate {
     return {
         attribute => $err->attribute,
         position  => $err->position,
+        expected  => $err->expected,
+        actual    => $err->actual,
         message   => "Contents do not match resource '@{[$spec->title]}'",
     } unless $valid;
 
@@ -141,6 +143,8 @@ sub validate {
 }
 
 package APISchema::Validator::Result;
+use strict;
+use warnings;
 
 # core
 use List::MoreUtils qw(all);
@@ -186,6 +190,8 @@ sub is_valid {
 }
 
 package APISchema::Validator::Decoder;
+use strict;
+use warnings;
 
 # cpan
 use JSON::XS qw(decode_json);
