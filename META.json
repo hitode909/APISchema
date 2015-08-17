@@ -59,7 +59,7 @@
             "Text::MicroTemplate::Extended" : "0",
             "URI::Escape" : "0",
             "URL::Encode" : "0",
-            "Valiemon" : "0",
+            "Valiemon" : "0.02",
             "perl" : "5.008001"
          }
       },
