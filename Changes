@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+0.03 2015-08-18T02:06:45Z
+    - Validation error has more details. expected: expected schema, actual: actual input data
+
 0.02 2015-03-16T02:35:36Z
     - Add a status_code parameter to P::MW::AS::RequestValidator
 

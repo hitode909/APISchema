@@ -60,7 +60,7 @@
             "URI::Escape" : "0",
             "URL::Encode" : "0",
             "Valiemon" : "0.03",
-            "perl" : "5.008001"
+            "perl" : "5.014"
          }
       },
       "test" : {
@@ -87,7 +87,7 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "0.02",
+   "version" : "0.03",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "aereal <aereal@aereal.org>"
