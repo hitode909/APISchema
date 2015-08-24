@@ -1,4 +1,4 @@
-resource feed => {
+resource author => {
     type => 'object',
     description => '著者',
     properties => {
