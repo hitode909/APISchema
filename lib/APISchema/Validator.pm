@@ -12,6 +12,8 @@ use Class::Accessor::Lite::Lazy (
 
 # lib
 use APISchema::Resource;
+use APISchema::Validator::Decoder;
+use APISchema::Validator::Result;
 
 use constant +{
     DEFAULT_VALIDATOR_CLASS => 'Valiemon',
@@ -141,80 +143,6 @@ sub validate {
 
     return $result;
 }
-
-package APISchema::Validator::Result;
-use strict;
-use warnings;
-
-# core
-use List::MoreUtils qw(all);
-
-# cpan
-use Hash::Merge::Simple ();
-use Class::Accessor::Lite (
-    new => 1,
-);
-
-sub new_valid {
-    my ($class, @targets) = @_;
-    return $class->new(values => { map { ($_ => [1]) } @targets });
-}
-
-sub new_error {
-    my ($class, $target, $err) = @_;
-    return $class->new(values => { ( $target // '' ) => [ undef, $err] });
-}
-
-sub _values { shift->{values} // {} }
-
-sub merge {
-    my ($self, $other) = @_;
-    $self->{values} = Hash::Merge::Simple::merge(
-        $self->_values,
-        $other->_values,
-    );
-    return $self;
-}
-
-sub errors {
-    my $self = shift;
-    return +{ map {
-        my $err = $self->_values->{$_}->[1];
-        $err ? ( $_ => $err ) : ();
-    } keys %{$self->_values} };
-}
-
-sub is_valid {
-    my $self = shift;
-    return all { $self->_values->{$_}->[0] } keys %{$self->_values};
-}
-
-package APISchema::Validator::Decoder;
-use strict;
-use warnings;
-
-# cpan
-use JSON::XS qw(decode_json);
-use URL::Encode qw(url_params_mixed);
-use Class::Accessor::Lite ( new => 1 );
-
-sub perl {
-    my ($self, $body) = @_;
-    return $body;
-}
-
-my $JSON = JSON::XS->new->utf8;
-sub json {
-    my ($self, $body) = @_;
-    return $JSON->decode($body);
-}
-
-sub url_parameter {
-    my ($self, $body) = @_;
-    return url_params_mixed($body, 1);
-}
-
-package APISchema::Validator;
 
 1;
 __END__
