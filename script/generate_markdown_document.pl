@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use Encode qw(encode_utf8);
 
 BEGIN {
     # cpan
@@ -27,4 +28,4 @@ my $schema = APISchema::DSL::process {
 };
 
 my $generator = APISchema::Generator::Markdown->new;
-print $generator->format_schema($schema);
+print encode_utf8 $generator->format_schema($schema);

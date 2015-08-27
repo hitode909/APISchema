@@ -1,6 +1,7 @@
 package t::APISchema::Generator::Markdown;
 use t::test;
 use t::test::fixtures;
+use utf8;
 
 sub _require : Test(startup => 1) {
     my ($self) = @_;

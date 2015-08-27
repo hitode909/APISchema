@@ -292,3 +292,38 @@ sub status : Tests {
         };
     };
 }
+
+sub response_validator_with_utf8 : Tests {
+    my $schema = t::test::fixtures::prepare_user;
+    $schema->register_route(
+        method => 'GET',
+        route => '/user',
+        response_resource => {
+            body => 'user',
+        },
+    );
+    my $middleware = Plack::Middleware::APISchema::ResponseValidator->new(schema => $schema);
+    $middleware->wrap(sub {
+        [200, [ 'Content-Type' => 'application/json; charset=utf-8' ], [ encode_json({ first_name => 'Bill', last_name => []}) ]  ]
+    });
+
+    subtest 'invalid response with utf8' => sub {
+        test_psgi $middleware => sub {
+            my $server = shift;
+            my $res = $server->(GET '/user');
+            is $res->code, 500;
+            # warn $res->content;
+            cmp_deeply $res->content, json({
+                body => {
+                    attribute => "Valiemon::Attributes::Type",
+                    position => '/$ref/properties/last_name/type',
+                    expected => $schema->get_resource_by_name('user')->definition->{properties}->{last_name},
+                    actual => [],
+                    message => "Contents do not match resource 'user'",
+                    encoding => 'json',
+                },
+            });
+            done_testing;
+        };
+    };
+}

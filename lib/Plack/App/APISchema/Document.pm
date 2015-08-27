@@ -6,6 +6,7 @@ use Plack::Util::Accessor qw(schema);
 use Text::Markdown::Hoedown qw(markdown);
 use Text::MicroTemplate qw(encoded_string);
 use Text::MicroTemplate::DataSection qw(render_mt);
+use Encode qw(encode_utf8);
 
 use APISchema::Generator::Markdown;
 
@@ -30,7 +31,7 @@ sub call {
     my $title = $self->schema->title || '';
     my $html = render_mt('template.mt', $title, $body);
 
-    return [200, ['Content-Type' => 'text/html; charset=utf-8'], [$html]];
+    return [200, ['Content-Type' => 'text/html; charset=utf-8'], [encode_utf8 $html]];
 }
 
 1;
