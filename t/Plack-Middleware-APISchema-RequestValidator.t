@@ -330,7 +330,7 @@ sub request_validator_with_utf8 : Tests {
             );
             is $res->code, 400;
             cmp_deeply $res->content, json({
-                bod  => {
+                body  => {
                     actual    => [],
                     attribute => 'Valiemon::Attributes::Type',
                     position  => '/$ref/properties/last_name/type',
