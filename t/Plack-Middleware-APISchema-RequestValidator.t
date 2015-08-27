@@ -301,3 +301,45 @@ sub request_validator : Tests {
         }
     };
 }
+
+sub request_validator_with_utf8 : Tests {
+    my $schema = t::test::fixtures::prepare_user;
+    $schema->register_route(
+        method => 'POST',
+        route => '/user',
+        request_resource => {
+            body => 'user',
+        },
+    );
+
+    my $middleware = Plack::Middleware::APISchema::RequestValidator->new(schema => $schema);
+    $middleware->wrap(sub {
+        [200, [ 'Content-Type' => 'text/plain' ], [ 'dummy' ]  ]
+    });
+
+    subtest 'when invalid request' => sub {
+        test_psgi $middleware => sub {
+            my $server = shift;
+            my $res = $server->(
+                POST '/user',
+                Content_Type => 'application/json',
+                Content => encode_json({
+                    first_name => 'Bill',
+                    last_name => [],
+                }),
+            );
+            is $res->code, 400;
+            cmp_deeply $res->content, json({
+                bod  => {
+                    actual    => [],
+                    attribute => 'Valiemon::Attributes::Type',
+                    position  => '/$ref/properties/last_name/type',
+                    expected  => $schema->get_resource_by_name('user')->definition->{properties}->{last_name},
+                    encoding  => 'json',
+                    message   => "Contents do not match resource 'user'",
+                },
+            });
+            done_testing;
+        };
+    };
+}
