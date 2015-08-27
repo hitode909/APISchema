@@ -2,6 +2,10 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.00 2015-08-27T10:48:03Z
+    - Support schema which contains unicode characters
+    - Enable `use utf8` in DSL file
+
 0.03 2015-08-18T02:06:45Z
     - Validation error has more details. expected: expected schema, actual: actual input data
 
