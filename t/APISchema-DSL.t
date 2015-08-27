@@ -1,5 +1,6 @@
 package t::APISchema::Generator::Router::Simple;
 use t::test;
+use Encode qw(decode_utf8);
 
 sub _require : Test(startup => 1) {
     my ($self) = @_;
@@ -263,5 +264,34 @@ sub from_file : Tests {
         my $schema = APISchema::DSL::process {
             include 't/fixtures/runtime-error.def';
         };
+    };
+}
+
+sub with_unicode : Tests {
+    my $schema = APISchema::DSL::process {
+        include 't/fixtures/user.def';
+    };
+
+    isa_ok $schema, 'APISchema::Schema';
+
+    is $schema->title, decode_utf8('ユーザー');
+    is $schema->description, decode_utf8('ユーザーの定義');
+
+    cmp_deeply $schema->get_resource_by_name('user')->{definition}, {
+        type => 'object',
+        description => decode_utf8('ユーザー'),
+        properties => {
+            first_name  => {
+                type => 'string',
+                description => decode_utf8('姓'),
+                example => decode_utf8('小飼'),
+            },
+            last_name  => {
+                type => 'string',
+                description => decode_utf8('名'),
+                example => decode_utf8('弾'),
+            },
+        },
+        required => ['first_name', 'last_name'],
     };
 }

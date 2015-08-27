@@ -10,6 +10,7 @@ use Carp ();
 
 # cpan
 use Exporter 'import';
+use Path::Class qw(file);
 
 my %schema_meta = (
     ( map { $_ => "${_}_resource" } qw(request response) ),
@@ -31,8 +32,11 @@ sub process (&) {
     my $schema = APISchema::Schema->new;
 
     local $_directive->{include} = sub {
-        -r $_[0] or Carp::croak(sprintf 'No such file: %s', $_[0]);
-        do $_[0];
+        my ($file) = @_;
+        -r $_[0] or Carp::croak(sprintf 'No such file: %s', $file);
+        my $content = file($file)->slurp;
+        my $with_utf8 = "use utf8;\n" . $content;
+        eval $with_utf8;
         Carp::croak($@) if $@;
     };
     local $_directive->{title} = sub {
