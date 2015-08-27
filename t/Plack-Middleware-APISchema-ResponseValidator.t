@@ -312,7 +312,6 @@ sub response_validator_with_utf8 : Tests {
             my $server = shift;
             my $res = $server->(GET '/user');
             is $res->code, 500;
-            # warn $res->content;
             cmp_deeply $res->content, json({
                 body => {
                     attribute => "Valiemon::Attributes::Type",
