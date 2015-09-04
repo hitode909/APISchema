@@ -18,7 +18,7 @@ my %schema_meta = (
 );
 
 our %METHODS = (
-    ( map { $_ => $_ } qw(HEAD GET POST PUT DELETE) ),
+    ( map { $_ => $_ } qw(HEAD GET POST PUT DELETE PATCH) ),
     FETCH => [qw(GET HEAD)],
 );
 our @DIRECTIVES = (qw(include filter resource title description), keys %METHODS);

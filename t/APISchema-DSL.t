@@ -76,6 +76,32 @@ sub process : Tests {
         };
     };
 
+    subtest 'Support PATCH' => sub {
+        lives_ok {
+            my $schema = APISchema::DSL::process {
+                PATCH '/my' => {
+                    title       => 'Update My BMI',
+                    destination => {
+                        controller => 'BMI',
+                        action     => 'update',
+                    },
+                };
+            };
+            isa_ok $schema, 'APISchema::Schema';
+
+            my $routes = $schema->get_routes;
+            is scalar @$routes, 1;
+
+            is $routes->[0]->route, '/my';
+            is $routes->[0]->title, 'Update My BMI';
+            is $routes->[0]->method, 'PATCH';
+            is_deeply $routes->[0]->destination, {
+                controller => 'BMI',
+                action     => 'update',
+            };
+        };
+    };
+
     subtest 'Validation should be returned' => sub {
         lives_ok {
             my $schema = APISchema::DSL::process {
