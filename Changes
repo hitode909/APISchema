@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.01 2015-09-04T09:32:37Z
+    - Recognize HTTP PATCH method (aereal++)
+
 1.00 2015-08-27T10:48:03Z
     - Support schema which contains unicode characters
     - Enable `use utf8` in DSL file
