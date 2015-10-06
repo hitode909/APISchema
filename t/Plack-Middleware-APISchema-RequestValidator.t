@@ -1,6 +1,7 @@
 package t::Plack::Middleware::APISchema::RequestValidator;
 use t::test;
 use t::test::fixtures;
+use List::MoreUtils;
 use Plack::Test;
 use HTTP::Request::Common;
 use JSON::XS qw(encode_json);
@@ -117,28 +118,48 @@ sub request_validator : Tests {
     };
 
     subtest 'when invalid request (with explicit error status code)' => sub {
-        my $middleware_with_status_code = Plack::Middleware::APISchema::RequestValidator->new(schema => $schema, status_code => 422);
-        $middleware_with_status_code->wrap(sub {
+        my $middleware_with_custom_status_code = Plack::Middleware::APISchema::RequestValidator->new(
+            schema => $schema,
+            status_code_resolver => sub {
+                my ($validation_result) = @_;
+                if ($validation_result->errors->{body}->{message} =~ m/Wrong content-type/) {
+                    return 415;
+                } else {
+                    return 400;
+                }
+            }
+        );
+        $middleware_with_custom_status_code->wrap(sub {
             [200, [ 'Content-Type' => 'text/plain' ], [ 'dummy' ]  ]
         });
-        test_psgi $middleware_with_status_code => sub {
+        test_psgi $middleware_with_custom_status_code => sub {
             my $server = shift;
-            my $res = $server->(
-                POST '/bmi',
-                Content_Type => 'application/json',
-                Content => encode_json({}),
-            );
-            is $res->code, 422;
-            cmp_deeply $res->content, json({
-                body => {
-                    attribute => 'Valiemon::Attributes::Required',
-                    position => '/$ref/required',
-                    message => "Contents do not match resource 'figure'",
-                    encoding => 'json',
-                    actual => {},
-                    expected => $schema->get_resource_by_name('figure')->definition,
-                },
-            });
+            {
+                my $res = $server->(
+                    POST '/bmi_strict',
+                    Content_Type => 'application/x-www-form-urlencoded',
+                    Content => encode_json({weight => 50, height => 1.6}),
+                );
+                is $res->code, 415;
+            };
+            {
+                my $res = $server->(
+                    POST '/bmi',
+                    Content_Type => 'application/json',
+                    Content => encode_json({}),
+                );
+                is $res->code, 400;
+                cmp_deeply $res->content, json({
+                    body => {
+                        attribute => 'Valiemon::Attributes::Required',
+                        position => '/$ref/required',
+                        message => "Contents do not match resource 'figure'",
+                        encoding => 'json',
+                        actual => {},
+                        expected => $schema->get_resource_by_name('figure')->definition,
+                    },
+                });
+            };
             done_testing;
         }
     };
