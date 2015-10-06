@@ -3,6 +3,8 @@ use t::test;
 use t::test::fixtures;
 use utf8;
 
+use APISchema::DSL;
+
 sub _require : Test(startup => 1) {
     my ($self) = @_;
 
@@ -59,6 +61,20 @@ EOS
         like $markdown, qr{\nHTTP/1.1 200 OK\nSucceeded!\n};
         like $markdown, qr{#### Response `400 Bad Request`};
     };
+
+    subtest 'example with no containers' => sub {
+        my $schema = APISchema::DSL::process {
+          resource gender => {
+            enum => ['male', 'female', 'other'],
+            example => 'other',
+          };
+        };
+
+        my $generator = APISchema::Generator::Markdown->new;
+        my $markdown = $generator->format_schema($schema);
+
+        like $markdown, qr/^"other"$/m;
+    };
 }
 
 sub generate_utf8 : Tests {
@@ -68,7 +84,7 @@ sub generate_utf8 : Tests {
         my $generator = APISchema::Generator::Markdown->new;
         my $markdown = $generator->format_schema($schema);
 
-        like $markdown, qr!\Q{"first_name":"小飼","last_name":"弾"}\E!;
+        like $markdown, qr!{\n   "first_name" : "小飼",\n   "last_name" : "弾"\n}!;
         like $markdown, qr!\Q|`.last_name` |`string` | |`"弾"` | |名 |\E!;
     };
 }

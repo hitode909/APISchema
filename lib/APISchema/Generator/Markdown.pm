@@ -214,7 +214,7 @@ HTTP/1.1 <?= http_status($code) ?><?= $example->header ?><?= $example->body ?>
 ? my ($r, $resource, $properties) = @_;
 ### <a name="<?= anchor(resource => $resource) ?>"></a> `<?= $resource->title ?>` : <?= type($resource->definition) ?>
 ```javascript
-<?= json $r->example($resource->definition) ?>
+<?= pretty_json $r->example($resource->definition) ?>
 ```
 
 ?= $resource->definition->{description} || ''
