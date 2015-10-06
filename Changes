@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.02 2015-10-06T07:12:24Z
+    - Prettify the output of examples (aereal++)
+
 1.01 2015-09-04T09:32:37Z
     - Recognize HTTP PATCH method (aereal++)
 
