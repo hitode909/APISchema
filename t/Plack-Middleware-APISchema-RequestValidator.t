@@ -3,6 +3,7 @@ use t::test;
 use t::test::fixtures;
 use Plack::Test;
 use HTTP::Request::Common;
+use HTTP::Status qw(:constants);
 use JSON::XS qw(encode_json);
 
 sub _require : Test(startup => 1) {
@@ -101,7 +102,7 @@ sub request_validator : Tests {
                 Content_Type => 'application/json',
                 Content => encode_json({}),
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 body => {
                     attribute => 'Valiemon::Attributes::Required',
@@ -159,7 +160,7 @@ sub request_validator : Tests {
                 Content_Type => 'application/json',
                 Content => 'aaa',
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 body => {
                     message => "Failed to parse json",
@@ -179,7 +180,7 @@ sub request_validator : Tests {
                 Content_Type => $content_type,
                 Content => encode_json({weight => 50, height => 1.6}),
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 body => {
                     attribute => 'Valiemon::Attributes::Required',
@@ -219,7 +220,7 @@ sub request_validator : Tests {
                 Content_Type => $content_type,
                 Content => encode_json({weight => 50, height => 1.6}),
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNSUPPORTED_MEDIA_TYPE;
             cmp_deeply $res->content, json({
                 body => { message => "Wrong content-type: $content_type" },
             });
@@ -244,7 +245,7 @@ sub request_validator : Tests {
             my $res = $server->(
                 POST '/bmi_by_parameter?weight=50',
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 parameter => {
                     attribute => 'Valiemon::Attributes::Required',
@@ -281,7 +282,7 @@ sub request_validator : Tests {
                 POST '/bmi_by_header',
                 X_Weight => 50,
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 header => {
                     attribute => 'Valiemon::Attributes::Required',
@@ -328,7 +329,7 @@ sub request_validator_with_utf8 : Tests {
                     last_name => [],
                 }),
             );
-            is $res->code, 400;
+            is $res->code, HTTP_UNPROCESSABLE_ENTITY;
             cmp_deeply $res->content, json({
                 body  => {
                     actual    => [],
