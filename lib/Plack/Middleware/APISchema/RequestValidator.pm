@@ -4,7 +4,7 @@ use warnings;
 
 use parent qw(Plack::Middleware);
 use HTTP::Status qw(:constants);
-use Plack::Util::Accessor qw(schema validator status_code);
+use Plack::Util::Accessor qw(schema validator);
 use Plack::Request;
 use APISchema::Generator::Router::Simple;
 use APISchema::Validator;
