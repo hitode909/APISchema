@@ -3,7 +3,7 @@ use 5.014;
 
 # core
 use Exporter qw(import);
-our @EXPORT = qw(type json code restriction desc anchor method methods content_type http_status http_status_code);
+our @EXPORT = qw(type json pretty_json code restriction desc anchor method methods content_type http_status http_status_code);
 
 # cpan
 use HTTP::Status qw(status_message);
@@ -47,6 +47,18 @@ sub json ($) {
     } else {
         $x = $JSON->encode([$x]);
         $x =~ s/^\[(.*)\]$/$1/;
+    }
+    return $x;
+}
+
+my $PRETTY_JSON = JSON::XS->new->canonical(1)->indent(1)->pretty(1);
+sub pretty_json ($) {
+    my $x = shift;
+    if (ref $x) {
+        $x = $PRETTY_JSON->encode($x);
+    } else {
+        $x = $PRETTY_JSON->encode([$x]);
+        $x =~ s/^\[\s*(.*)\s*\]\n$/$1/;
     }
     return $x;
 }
