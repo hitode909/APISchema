@@ -3,7 +3,8 @@ use strict;
 use warnings;
 
 use parent qw(Plack::Middleware);
-use Plack::Util::Accessor qw(schema validator status_code);
+use HTTP::Status qw(:constants);
+use Plack::Util::Accessor qw(schema validator);
 use Plack::Request;
 use APISchema::Generator::Router::Simple;
 use APISchema::Validator;
@@ -32,7 +33,7 @@ sub call {
     }, $self->schema);
 
     my $errors = $result->errors;
-    my $status_code = $self->status_code // 400;
+    my $status_code = $self->_resolve_status_code($result);
     return [
         $status_code,
         [ 'Content-Type' => 'application/json' ],
@@ -49,6 +50,12 @@ sub router {
         my $generator = APISchema::Generator::Router::Simple->new;
         $generator->generate_router($self->schema);
     };
+}
+
+sub _resolve_status_code {
+    my ($self, $validation_result) = @_;
+    my $error_message = $validation_result->errors->{body}->{message} // '';
+    return $error_message =~ m/Wrong content-type/ ? HTTP_UNSUPPORTED_MEDIA_TYPE : HTTP_UNPROCESSABLE_ENTITY;
 }
 
 
