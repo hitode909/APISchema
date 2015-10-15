@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.04 2015-10-15T10:38:54Z
+    - mock server feature
+
 1.03 2015-10-06T07:25:49Z
     - Determine the status code from the detail of failure (aereal++)
 
