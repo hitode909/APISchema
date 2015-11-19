@@ -90,6 +90,7 @@
    "version" : "1.04",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
-      "aereal <aereal@aereal.org>"
+      "aereal <aereal@aereal.org>",
+      "Tomohiro Nishimura <tomohiro68@gmail.com>"
    ]
 }
