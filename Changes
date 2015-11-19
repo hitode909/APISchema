@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.1 2015-11-19T06:32:07Z
+    - Add method and path info to documentation TOC (Sixeight++)
+
 1.04 2015-10-15T10:38:54Z
     - mock server feature
 
