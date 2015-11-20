@@ -2,6 +2,10 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.2 2015-11-20T04:37:28Z
+
+    - X-Error-Cause header indicates whether the response comes from app or validator
+
 1.1 2015-11-19T06:32:07Z
     - Add method and path info to documentation TOC (Sixeight++)
 
