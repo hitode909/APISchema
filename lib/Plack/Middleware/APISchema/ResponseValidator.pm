@@ -25,8 +25,9 @@ sub call {
         my $body;
         Plack::Util::foreach($res->[2] // [], sub { $body .= $_[0] });
 
+        my $validator_class = $self->validator // DEFAULT_VALIDATOR_CLASS;
         my $validator = APISchema::Validator->for_response(
-            validator_class => $self->validator // DEFAULT_VALIDATOR_CLASS,
+            validator_class => $validator_class,
         );
         my $result = $validator->validate($route->name => {
             status_code => $res->[0],
@@ -40,9 +41,10 @@ sub call {
 
         my $errors = $result->errors;
         if (scalar keys %$errors) {
+            my $error_cause = join '+', __PACKAGE__, $validator_class;
             @$res = (
                 500,
-                [ 'Content-Type' => 'application/json' ],
+                [ 'Content-Type' => 'application/json', 'X-Error-Cause' => $error_cause ],
                 [ encode_json($errors) ],
             );
             return;
