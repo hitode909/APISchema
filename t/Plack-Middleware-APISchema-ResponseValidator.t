@@ -83,6 +83,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 body => {
                     attribute => "Valiemon::Attributes::Type",
@@ -105,6 +106,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 body => { message => "Wrong content-type: text/plain" },
             });
@@ -120,6 +122,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 body => {
                     message => "Failed to parse json",
@@ -138,6 +141,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 body => {
                     attribute => 'Valiemon::Attributes::Required',
@@ -173,6 +177,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi_strict');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 body => { message => "Wrong content-type: $content_type" },
             });
@@ -208,6 +213,7 @@ sub response_validator : Tests {
             my $server = shift;
             my $res = $server->(POST '/bmi_by_header');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({
                 header => {
                     attribute => "Valiemon::Attributes::Required",
@@ -284,6 +290,7 @@ sub status : Tests {
             my $server = shift;
             my $res = $server->(GET '/get');
             is $res->code, 500;
+            is $res->header('X-Error-Cause'), 'Plack::Middleware::APISchema::ResponseValidator+Valiemon';
             cmp_deeply $res->content, json({ body => {
                 message => 'Failed to parse json',
                 encoding => 'json',
