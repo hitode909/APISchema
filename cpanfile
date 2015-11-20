@@ -12,6 +12,7 @@ requires 'List::MoreUtils';
 requires 'Hash::Merge::Simple';
 requires 'URL::Encode';
 requires 'HTML::Escape';
+requires 'Text::MicroTemplate';
 requires 'Text::MicroTemplate::Extended';
 requires 'Text::MicroTemplate::DataSection';
 requires 'Text::Markdown::Hoedown';
