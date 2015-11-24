@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.21 2015-11-24T02:35:14Z
+    - Added missing prereqs as reported by CPANTS
+
 1.2 2015-11-20T04:37:28Z
 
     - X-Error-Cause header indicates whether the response comes from app or validator

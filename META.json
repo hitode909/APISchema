@@ -55,6 +55,7 @@
             "Plack" : "0",
             "Router::Simple" : "0",
             "Text::Markdown::Hoedown" : "0",
+            "Text::MicroTemplate" : "0",
             "Text::MicroTemplate::DataSection" : "0",
             "Text::MicroTemplate::Extended" : "0",
             "URI::Escape" : "0",
@@ -87,10 +88,11 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "1.2",
+   "version" : "1.21",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "Tomohiro Nishimura <tomohiro68@gmail.com>",
-      "aereal <aereal@aereal.org>"
+      "aereal <aereal@aereal.org>",
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
    ]
 }
