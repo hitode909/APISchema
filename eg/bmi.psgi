@@ -66,21 +66,21 @@ Start the appliction.
 
 Then,
 
-    % curl -X POST -d '{"weight": 60, "height": '1.7'}' http://localhost:5000/bmi
+    % curl -X POST -H "Content-type: application/json" -d '{"weight": 60, "height": '1.7'}' http://localhost:5000/bmi
     {"value":20.7612456747405}
 
 Requests and Reponses to the API are validated by Middlewares.
 
-    % curl -X POST -d 'hello' http://localhost:5000/bmi
+    % curl -X POST -H "Content-type: application/json" -d 'hello' http://localhost:5000/bmi
     {"attribute":"Valiemon::Attributes::Required","position":"/required"}
 
-    % curl -X POST -d '{"weight": 60, "height": 'a'}' http://localhost:5000/bmi
+    % curl -X POST -H "Content-type: application/json" -d '{"weight": 60, "height": 'a'}' http://localhost:5000/bmi
     {"attribute":"Valiemon::Attributes::Required","position":"/required"}
 
-    % curl -X POST -d '{"weight": 60, "height": 'a'}' http://localhost:5000/bmi
+    % curl -X POST -H "Content-type: application/json" -d '{"weight": 60, "height": 'a'}' http://localhost:5000/bmi
     {"attribute":"Valiemon::Attributes::Required","position":"/required"}
 
-    % curl -X POST -d '{"weight": 60}' http://localhost:5000/bmi
+    % curl -X POST -H "Content-type: application/json" -d '{"weight": 60}' http://localhost:5000/bmi
     {"attribute":"Valiemon::Attributes::Required","position":"/required"}
 
 You can read the document of API at L<http://localhost:5000/doc/>
