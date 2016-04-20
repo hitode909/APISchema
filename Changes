@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.22 2016-04-20T06:08:32Z
+   - Update Valiemon
+
 1.21 2015-11-24T02:35:14Z
     - Added missing prereqs as reported by CPANTS
 

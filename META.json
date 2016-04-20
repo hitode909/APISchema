@@ -4,7 +4,7 @@
       "hitode909 <hitode909@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Minilla/v2.4.1, CPAN::Meta::Converter version 2.142690",
    "license" : [
       "perl_5"
    ],
@@ -88,7 +88,7 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "1.21",
+   "version" : "1.22",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "Tomohiro Nishimura <tomohiro68@gmail.com>",
