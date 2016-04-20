@@ -17,7 +17,7 @@ requires 'Text::MicroTemplate::Extended';
 requires 'Text::MicroTemplate::DataSection';
 requires 'Text::Markdown::Hoedown';
 requires 'HTTP::Message';
-requires 'Valiemon', '0.03';
+requires 'Valiemon', '0.04';
 requires 'URI::Escape';
 
 on 'test' => sub {
