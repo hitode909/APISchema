@@ -78,7 +78,7 @@ APISchema - Schema for API
     my $router = Router::Simple->new;
     $router->connect(...);
     my $generator = APISchema::Generator::Router::Simple->new;
-    $generator->generate_router($schema => $router);
+    $generator->inject_routes($schema => $router);
 
     # Documentation
     use APISchema::Generator::Markdown;
