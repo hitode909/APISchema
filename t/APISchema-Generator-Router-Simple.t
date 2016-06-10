@@ -2,6 +2,7 @@ package t::APISchema::Generator::Router::Simple;
 use t::test;
 use t::test::fixtures;
 use APISchema::Schema;
+use Router::Simple;
 
 sub _require : Test(startup => 1) {
     my ($self) = @_;
@@ -28,6 +29,30 @@ sub generate : Tests {
     };
 
     note $router->as_string;
+}
+
+sub inject_routes : Tests {
+    my $schema = t::test::fixtures::prepare_bmi;
+
+    my $router = Router::Simple->new;
+    $router->connect('/', {controller => 'Root', action => 'show'});
+
+    my $generator = APISchema::Generator::Router::Simple->new;
+    my $returned_router = $generator->inject_routes($schema => $router);
+
+    is $returned_router, $router;
+
+    isa_ok $router, 'Router::Simple';
+
+    cmp_deeply $router->match({ PATH_INFO => '/bmi', HTTP_HOST => 'localhost', REQUEST_METHOD => 'POST' } ), {
+        controller      => 'BMI',
+        action          => 'calculate',
+    };
+
+    cmp_deeply $router->match({ PATH_INFO => '/', HTTP_HOST => 'localhost', REQUEST_METHOD => 'GETPOST' } ), {
+        controller      => 'Root',
+        action          => 'show',
+    };
 }
 
 sub generate_custom_router : Tests {
