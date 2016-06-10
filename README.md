@@ -97,6 +97,6 @@ it under the same terms as Perl itself.
 
 # AUTHORS
 
-hitode909 &lt;hitode909@gmail.com>
+hitode909 <hitode909@gmail.com>
 
-tarao &lt;tarao.gnn@gmail.com>
+tarao <tarao.gnn@gmail.com>
