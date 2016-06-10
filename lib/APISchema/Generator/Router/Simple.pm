@@ -17,6 +17,14 @@ sub generate_router {
     my $router_class = $self->router_class // ROUTER_CLASS;
     my $router = load_class($router_class)->new;
 
+    $self->inject_routes($schema, $router);
+}
+
+sub inject_routes {
+    my ($self, $schema, $router) = @_;
+
+    my $router_class = ref $router;
+
     for my $route (@{$schema->get_routes}) {
         my $option = $route->option // {};
         $option = merge $option, $option->{$router_class} // {};
@@ -25,6 +33,7 @@ sub generate_router {
             map { $_ => $option->{$_} } qw(host on_match),
         });
     }
+
     $router;
 }
 
