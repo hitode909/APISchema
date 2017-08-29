@@ -4,13 +4,13 @@
       "hitode909 <hitode909@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.2, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "APISchema",
    "no_index" : {
@@ -88,7 +88,7 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "1.24",
+   "version" : "1.25",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "Tomohiro Nishimura <tomohiro68@gmail.com>",
