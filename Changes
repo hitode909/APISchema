@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.26 2017-08-30T02:20:58Z
+   - Expand `FETCH` method to `GET` and `HEAD`
+
 1.25 2017-08-29T02:31:53Z
    - You can inherit Plack::App::APISchema::Document and customize template
 

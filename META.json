@@ -88,11 +88,11 @@
          "web" : "https://github.com/hitode909/APISchema"
       }
    },
-   "version" : "1.25",
+   "version" : "1.26",
    "x_authority" : "cpan:HITODE",
    "x_contributors" : [
       "Tomohiro Nishimura <tomohiro68@gmail.com>",
-      "aereal <aereal@aereal.org>",
-      "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>",
+      "aereal <aereal@aereal.org>"
    ]
 }
