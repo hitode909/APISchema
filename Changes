@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.28 2017-11-17T09:49:53Z
+   - Handle boolean on generating document
+
 1.27 2017-09-19T09:58:40Z
    - Sort keys when encoding JSON
 
