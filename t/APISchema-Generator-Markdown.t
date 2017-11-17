@@ -103,3 +103,12 @@ sub generate_utf8 : Tests {
         like $markdown, qr!\Q|`.last_name` |`string` | |`"弾"` | |名 |\E!;
     };
 }
+
+sub boolean : Tests {
+    my $schema = t::test::fixtures::prepare_boolean;
+
+    my $generator = APISchema::Generator::Markdown->new;
+    my $markdown = $generator->format_schema($schema);
+
+    like $markdown, qr!\btrue\b!;
+}
