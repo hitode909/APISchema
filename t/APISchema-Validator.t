@@ -118,21 +118,18 @@ sub _forced_route ($$) {
     return $schema;
 }
 
-sub _invalid_encoding_route ($) {
-    my $schema = shift;
+sub _invalid_encoding_route ($$) {
+        my ($schema, $keys)  =  @_;
+        $keys = [qw(header parameter body)] unless defined $keys;
     $schema->register_route(
         route => '/endpoint',
         request_resource => {
-            header => 'figure',
-            parameter => 'figure',
-            body => 'figure',
             encoding => 'hoge',
+            map { $_ => 'figure' } @$keys
         },
         response_resource => {
-            header => 'bmi',
-            parameter => 'bmi',
-            body => 'bmi',
             encoding => 'hoge',
+            map { $_ => 'figure' } @$keys
         },
     );
     return $schema;
@@ -219,7 +216,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid with invalid encoding' => sub {
-        my $schema = _invalid_encoding_route t::test::fixtures::prepare_bmi;
+        my $schema = _invalid_encoding_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50, height => 1.6}),
@@ -402,7 +399,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid with invalid encoding' => sub {
-        my $schema = _invalid_encoding_route t::test::fixtures::prepare_bmi;
+        my $schema = _invalid_encoding_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({value => 19.5}),
