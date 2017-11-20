@@ -197,6 +197,18 @@ sub validate_request : Tests {
             [ ('json') ];
     };
 
+    subtest 'invalid without body' => sub {
+        for my $value ({}, '', undef) {
+            my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
+            my $validator = APISchema::Validator->for_request;
+            my $result = $validator->validate('/endpoint' => {
+                body => $value,
+            }, $schema);
+            ok ! $result->is_valid;
+            is_deeply [ keys %{$result->errors} ], [ 'body' ];
+        }
+    };
+
     subtest 'invalid with wrong encoding' => sub {
         my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
