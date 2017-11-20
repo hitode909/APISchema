@@ -129,27 +129,24 @@ sub _invalid_encoding_route ($$) {
         },
         response_resource => {
             encoding => 'hoge',
-            map { $_ => 'figure' } @$keys
+            map { $_ => 'bmi' } @$keys
         },
     );
     return $schema;
 }
 
-sub _strict_route ($) {
-    my $schema = shift;
+sub _strict_route ($$) {
+    my ($schema, $keys)  =  @_;
+    $keys = [qw(header parameter body)] unless defined $keys;
     $schema->register_route(
         route => '/endpoint',
         request_resource => {
-            header => 'figure',
-            parameter => 'figure',
-            body => 'figure',
             encoding => { 'application/json' => 'json' },
+            map { $_ => 'figure' } @$keys
         },
         response_resource => {
-            header => 'bmi',
-            parameter => 'bmi',
-            body => 'bmi',
             encoding => { 'application/json' => 'json' },
+            map { $_ => 'bmi' } @$keys
         },
     );
     return $schema;
@@ -239,7 +236,7 @@ sub validate_request : Tests {
     };
 
     subtest 'valid with strict content-type check' => sub {
-        my $schema = _strict_route t::test::fixtures::prepare_bmi;
+        my $schema = _strict_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50, height => 1.6}),
@@ -249,7 +246,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid with wrong content type' => sub {
-        my $schema = _strict_route t::test::fixtures::prepare_bmi;
+        my $schema = _strict_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $content_type = 'application/x-www-form-urlencoded';
         my $result = $validator->validate('/endpoint' => {
@@ -263,7 +260,7 @@ sub validate_request : Tests {
     };
 
     subtest 'valid parameter' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['parameter'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             parameter => 'weight=50&height=1.6',
@@ -422,7 +419,7 @@ sub validate_response : Tests {
     };
 
     subtest 'valid with strict content-type check' => sub {
-        my $schema = _strict_route t::test::fixtures::prepare_bmi;
+        my $schema = _strict_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({value => 19.5}),
@@ -432,7 +429,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid with wrong content type' => sub {
-        my $schema = _strict_route t::test::fixtures::prepare_bmi;
+        my $schema = _strict_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $content_type = 'application/x-www-form-urlencoded';
         my $result = $validator->validate('/endpoint' => {
@@ -469,7 +466,7 @@ sub validate_response : Tests {
     };
 
     subtest 'all valid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => { value => 19.5 },
@@ -480,7 +477,7 @@ sub validate_response : Tests {
     };
 
     subtest 'many invalid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => {},
