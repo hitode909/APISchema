@@ -1,4 +1,5 @@
 package t::APISchema::Generator::Markdown;
+use lib '.';
 use t::test;
 use t::test::fixtures;
 use utf8;
