@@ -119,8 +119,8 @@ sub _forced_route ($$) {
 }
 
 sub _invalid_encoding_route ($$) {
-        my ($schema, $keys)  =  @_;
-        $keys = [qw(header parameter body)] unless defined $keys;
+    my ($schema, $keys)  =  @_;
+    $keys = [qw(header parameter body)] unless defined $keys;
     $schema->register_route(
         route => '/endpoint',
         request_resource => {
