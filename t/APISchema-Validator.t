@@ -86,19 +86,16 @@ sub result : Tests {
     };
 }
 
-sub _simple_route ($) {
-    my $schema = shift;
+sub _simple_route ($$) {
+    my ($schema, $keys)  =  @_;
+    $keys = [qw(header parameter body)] unless defined $keys;
     $schema->register_route(
         route => '/endpoint',
         request_resource => {
-            header => 'figure',
-            parameter => 'figure',
-            body => 'figure',
+            map { $_ => 'figure' } @$keys
         },
         response_resource => {
-            header => 'bmi',
-            parameter => 'bmi',
-            body => 'bmi',
+            map { $_ => 'bmi' } @$keys
         },
     );
     return $schema;
@@ -178,14 +175,14 @@ sub validate_request : Tests {
     };
 
     subtest 'valid with empty target' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, [];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {}, $schema);
         ok $result->is_valid;
     };
 
     subtest 'valid with some target and schema' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50, height => 1.6}),
@@ -195,7 +192,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid with missing property' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50}),
@@ -210,7 +207,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid with wrong encoding' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50, height => 1.6}),
@@ -272,7 +269,7 @@ sub validate_request : Tests {
     };
 
     subtest 'valid parameter' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             parameter => 'weight=50&height=1.6',
@@ -281,7 +278,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid parameter' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['parameter'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             parameter => 'weight=50',
@@ -294,7 +291,7 @@ sub validate_request : Tests {
     };
 
     subtest 'valid header' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['header'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             header => { weight => 50, height => 1.6 },
@@ -303,7 +300,7 @@ sub validate_request : Tests {
     };
 
     subtest 'invalid header' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['header'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             header => { weight => 50 },
@@ -317,7 +314,7 @@ sub validate_request : Tests {
     };
 
     subtest 'all valid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             header => { weight => 50, height => 1.6 },
@@ -329,7 +326,7 @@ sub validate_request : Tests {
     };
 
     subtest 'many invalid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             header => { weight => 50 },
@@ -361,14 +358,14 @@ sub validate_response : Tests {
     };
 
     subtest 'valid with empty target' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, [];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {}, $schema);
         ok $result->is_valid;
     };
 
     subtest 'valid with some target and schema' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({value => 19.5}),
@@ -378,7 +375,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid with missing property' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({hoge => 'foo'}),
@@ -393,7 +390,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid with wrong encoding' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({value => 19.5}),
@@ -455,7 +452,7 @@ sub validate_response : Tests {
     };
 
     subtest 'valid header' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => { value => 19.5 },
@@ -464,7 +461,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid header' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => {},
@@ -478,7 +475,7 @@ sub validate_response : Tests {
     };
 
     subtest 'all valid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => { value => 19.5 },
@@ -489,7 +486,7 @@ sub validate_response : Tests {
     };
 
     subtest 'many invalid' => sub {
-        my $schema = _simple_route t::test::fixtures::prepare_bmi;
+        my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body', 'parameter', 'header'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             header => {},
