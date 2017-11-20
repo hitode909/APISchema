@@ -101,21 +101,18 @@ sub _simple_route ($$) {
     return $schema;
 }
 
-sub _forced_route ($) {
-    my $schema = shift;
+sub _forced_route ($$) {
+    my ($schema, $keys)  =  @_;
+    $keys = [qw(header parameter body)] unless defined $keys;
     $schema->register_route(
         route => '/endpoint',
         request_resource => {
-            header => 'figure',
-            parameter => 'figure',
-            body => 'figure',
             encoding => 'json',
+            map { $_ => 'figure' } @$keys
         },
         response_resource => {
-            header => 'bmi',
-            parameter => 'bmi',
-            body => 'bmi',
             encoding => 'json',
+            map { $_ => 'bmi' } @$keys
         },
     );
     return $schema;
@@ -235,7 +232,7 @@ sub validate_request : Tests {
     };
 
     subtest 'valid with forced encoding' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_bmi;
+        my $schema = _forced_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({weight => 50, height => 1.6}),
@@ -418,7 +415,7 @@ sub validate_response : Tests {
     };
 
     subtest 'valid with forced encoding' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_bmi;
+        my $schema = _forced_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('/endpoint' => {
             body => encode_json({value => 19.5}),
@@ -504,7 +501,7 @@ sub validate_response : Tests {
     };
 
     subtest 'valid referenced resource' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_family;
+        my $schema = _forced_route t::test::fixtures::prepare_family, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('Children GET API' => {
             body => encode_json([ {
@@ -520,7 +517,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid referenced resource' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_family;
+        my $schema = _forced_route t::test::fixtures::prepare_family, ['body'];
         my $validator = APISchema::Validator->for_response;
         my $result = $validator->validate('Children GET API' => {
             body => encode_json([ {
@@ -537,7 +534,7 @@ sub validate_response : Tests {
  SKIP: {
     skip 'Recursive dereference is not implemented in Valiemon', 2;
     subtest 'valid recursively referenced resource' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_family;
+        my $schema = _forced_route t::test::fixtures::prepare_family, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('Children GET API' => {
             parameter => 'name=Bob',
@@ -546,7 +543,7 @@ sub validate_response : Tests {
     };
 
     subtest 'invalid recursively referenced resource' => sub {
-        my $schema = _forced_route t::test::fixtures::prepare_family;
+        my $schema = _forced_route t::test::fixtures::prepare_family, ['body'];
         my $validator = APISchema::Validator->for_request;
         my $result = $validator->validate('Children GET API' => {
             parameter => 'person=Bob',
