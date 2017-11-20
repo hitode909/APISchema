@@ -209,6 +209,19 @@ sub validate_request : Tests {
         }
     };
 
+    subtest 'invalid without parameter' => sub {
+        for my $value ({}, '', undef) {
+            my $schema = _simple_route t::test::fixtures::prepare_bmi, ['parameter'];
+            my $validator = APISchema::Validator->for_request;
+            my $result = $validator->validate('/endpoint' => {
+                parameter => $value,
+            }, $schema);
+            ok ! $result->is_valid;
+            is_deeply [ keys %{$result->errors} ], [ 'parameter' ];
+        }
+    };
+
+
     subtest 'invalid with wrong encoding' => sub {
         my $schema = _simple_route t::test::fixtures::prepare_bmi, ['body'];
         my $validator = APISchema::Validator->for_request;
