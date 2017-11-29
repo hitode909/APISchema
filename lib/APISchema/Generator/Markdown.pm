@@ -57,18 +57,14 @@ sub format_schema {
             my $req = resolve_encoding($route->request_resource);
             my $request_resource = $route->canonical_request_resource($root);
 
-            my $codes = do {
-                my $res = $route->response_resource;
-                $res = {} unless $res && ref $res;
-                [ sort grep { $_ =~ qr!\A[0-9]+\z! } keys %$res ];
-            };
-            my $default_code = $codes->[0] // 200;
+            my $codes = $route->responsible_codes;
+            my $default_code = $route->default_responsible_code;
             my $response_resource = $route->canonical_response_resource($root, [
                 $default_code
             ]);
 
             my $res = $_->response_resource;
-            $res = scalar @$codes
+            $res = $_->responsible_code_is_specified
                 ? { map { $_ => resolve_encoding($res->{$_}) } @$codes }
                 : { '' => resolve_encoding($res) };
 

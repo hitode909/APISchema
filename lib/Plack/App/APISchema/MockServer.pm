@@ -26,13 +26,7 @@ sub call {
 
     my $route = $self->schema->get_route_by_name($router_simple_route->name);
 
-    # TODO: copied from APISchema::Generator::Markdown.
-    my $codes = do {
-        my $res = $route->response_resource;
-        $res = {} unless $res && ref $res;
-        [ sort grep { $_ =~ qr!\A[0-9]+\z! } keys %$res ];
-    };
-    my $default_code = $codes->[0] // 200;
+    my $default_code = $route->default_responsible_code;
     my $response_resource = $route->canonical_response_resource($root, [
         $default_code
     ]);
