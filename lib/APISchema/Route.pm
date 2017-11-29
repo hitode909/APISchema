@@ -57,6 +57,15 @@ sub canonical_response_resource {
     );
 }
 
+sub responsible_code_is_specified {
+    my ($self) = @_;
+    my $res = $self->response_resource;
+    return unless $res && ref $res;
+
+    my @codes = sort grep { $_ =~ qr!\A[0-9]+\z! } keys %$res;
+    return @codes > 0;
+}
+
 sub responsible_codes {
     my ($self) = @_;
 

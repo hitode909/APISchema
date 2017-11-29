@@ -51,6 +51,7 @@ sub responsible_codes : Tests {
         );
         cmp_deeply $route->responsible_codes, [200];
         is $route->default_responsible_code, 200;
+        ok ! $route->responsible_code_is_specified;
     };
 
     subtest 'when multiple response codes are specified' => sub {
@@ -71,6 +72,7 @@ sub responsible_codes : Tests {
             },
         );
         is $route->default_responsible_code, 201;
+        ok $route->responsible_code_is_specified;
     };
 
 }
