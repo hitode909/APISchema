@@ -69,8 +69,9 @@ sub responsible_code_is_specified {
 sub responsible_codes {
     my ($self) = @_;
 
+    return [200] unless $self->responsible_code_is_specified;
+
     my $res = $self->response_resource;
-    return [200] unless $res && ref $res;
     my @codes = sort grep { $_ =~ qr!\A[0-9]+\z! } keys %$res;
     return @codes ? [@codes] : [200];
 }
