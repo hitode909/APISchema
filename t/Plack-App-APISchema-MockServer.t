@@ -70,8 +70,7 @@ sub when_encoding_is_specified : Tests {
 }
 
 sub with_wide_character : Tests {
-    sub serve_document_bmi : Tests {
-     my $schema = t::test::fixtures::prepare_author;
+    my $schema = t::test::fixtures::prepare_author;
     $schema->register_route(
         method => 'GET',
         route => '/author',
@@ -86,11 +85,8 @@ sub with_wide_character : Tests {
     test_psgi $app => sub {
         my $server = shift;
         my $res = $server->(GET '/author');
-             is $res->code, 200;
-             is $res->header('content-type'), 'application/json; charset=utf-8';
-             is $res->content, q!{"author_name":"著者"}!;
-        }
+        is $res->code, 200;
+        is $res->header('content-type'), 'application/json; charset=utf-8';
+        is $res->content, q!{"author_name":"著者"}!;
     };
-}
-
 }
