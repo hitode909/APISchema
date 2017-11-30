@@ -22,6 +22,14 @@ sub type ($) {
     my $def = shift;
     my $bar = '&#124;';
 
+    if (ref $def) {
+        for my $type (qw(oneOf anyOf allOf)) {
+            if (my $union = $def->{$type}) {
+                return "$type " .  join($bar, map { type($_) } @$union);
+            }
+        }
+    }
+
     my $ref = ref $def ? $def->{'$ref'} : $def;
     if ($ref) {
         $ref = $ref =~ s!^#/resource/!!r;
