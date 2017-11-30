@@ -18,6 +18,8 @@ use constant +{
     SHORT_DESCRIPTION_LENGTH => 100,
 };
 
+sub type ($); # type has recursive call
+
 sub type ($) {
     my $def = shift;
     my $bar = '&#124;';
