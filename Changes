@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.34 2017-11-30T16:29:26Z
+  - Define prototype of type before calling it
+
 1.33 2017-11-30T14:39:09Z
   - Resolve anyOf, allOf and oneOf keywords when serving Mock Server and API Document
 
