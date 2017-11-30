@@ -2,6 +2,9 @@ Revision history for Perl extension APISchema
 
 {{$NEXT}}
 
+1.32 2017-11-30T06:08:51Z
+  - MockServer always returns bytes
+
 1.31 2017-11-29T02:30:47Z
   - MockServer support `response => {body => 'bmi', encoding => 'json'}` syntax
 
