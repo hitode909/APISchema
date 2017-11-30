@@ -25,7 +25,7 @@ sub type ($) {
     if (ref $def) {
         for my $type (qw(oneOf anyOf allOf)) {
             if (my $union = $def->{$type}) {
-                return "$type " .  join($bar, map { type($_) } @$union);
+                return join($bar, map { type($_) } @$union);
             }
         }
     }
