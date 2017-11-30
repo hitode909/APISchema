@@ -68,3 +68,29 @@ sub when_encoding_is_specified : Tests {
         is $res->content, q!{"value":19.5}!;
     }
 }
+
+sub with_wide_character : Tests {
+    sub serve_document_bmi : Tests {
+     my $schema = t::test::fixtures::prepare_author;
+    $schema->register_route(
+        method => 'GET',
+        route => '/author',
+        response_resource => {
+            encoding => 'json',
+            body => 'author',
+        },
+    );
+
+    my $app = Plack::App::APISchema::MockServer->new(schema => $schema)->to_app;
+
+    test_psgi $app => sub {
+        my $server = shift;
+        my $res = $server->(GET '/author');
+             is $res->code, 200;
+             is $res->header('content-type'), 'application/json; charset=utf-8';
+             is $res->content, q!{"author_name":"著者"}!;
+        }
+    };
+}
+
+}
