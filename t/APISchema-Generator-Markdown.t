@@ -121,5 +121,5 @@ sub example_null : Tests {
     my $markdown = $generator->format_schema($schema);
 
     like $markdown, qr!"value" : null!;
-    like $markdown, qr!\Q|`.value` |`string` | |`null` | |The Value |\E!;
+    like $markdown, qr!\Q|`.value` |`null` | |`null` | |The Value |\E!;
 }
