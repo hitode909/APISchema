@@ -5,7 +5,7 @@ resource value => {
     description => 'the result',
     properties => {
         value  => {
-            type => 'string',
+            type => 'null',
             description => 'The Value',
             example => undef,
         },
