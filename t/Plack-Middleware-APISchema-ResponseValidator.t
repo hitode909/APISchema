@@ -20,7 +20,7 @@ sub instantiate : Tests {
 
     is $middleware->schema, $schema;
 
-    isa_ok $middleware->router, 'Router::Simple';
+    isa_ok $middleware->router($schema), 'Router::Simple';
 }
 
 sub response_validator : Tests {

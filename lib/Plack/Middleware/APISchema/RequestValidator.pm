@@ -2,7 +2,7 @@ package Plack::Middleware::APISchema::RequestValidator;
 use strict;
 use warnings;
 
-use parent qw(Plack::Middleware);
+use parent qw(Plack::Middleware APISchema::HasSchema);
 use HTTP::Status qw(:constants);
 use Plack::Util::Accessor qw(schema validator);
 use Plack::Request;
@@ -15,8 +15,9 @@ use constant DEFAULT_VALIDATOR_CLASS => 'Valiemon';
 sub call {
     my ($self, $env) = @_;
     my $req = Plack::Request->new($env);
+    my $schema = $self->prepare_schema($env);
 
-    my ($matched, $route) = $self->router->routematch($env);
+    my ($matched, $route) = $self->router($schema)->routematch($env);
     $matched or return $self->app->($env);
 
     my $validator = APISchema::Validator->for_request(
@@ -30,7 +31,7 @@ sub call {
         parameter => $env->{QUERY_STRING},
         body => $req->content,
         content_type => $req->content_type,
-    }, $self->schema);
+    }, $schema);
 
     my $errors = $result->errors;
     my $status_code = $self->_resolve_status_code($result);
@@ -44,12 +45,10 @@ sub call {
 }
 
 sub router {
-    my ($self) = @_;
+    my ($self, $schema) = @_;
 
-    $self->{router} //= do {
-        my $generator = APISchema::Generator::Router::Simple->new;
-        $generator->generate_router($self->schema);
-    };
+    my $generator = APISchema::Generator::Router::Simple->new;
+    $generator->generate_router($schema);
 }
 
 sub _resolve_status_code {

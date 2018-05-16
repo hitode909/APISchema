@@ -20,7 +20,7 @@ sub instantiate : Tests {
 
     is $middleware->schema, $schema;
 
-    isa_ok $middleware->router, 'Router::Simple';
+    isa_ok $middleware->router($schema), 'Router::Simple';
 }
 
 sub request_validator : Tests {
@@ -77,7 +77,7 @@ sub request_validator : Tests {
                 Content_Type => 'application/json',
                 Content => encode_json({weight => 50, height => 1.6}),
             );
-            is $res->code, 200;
+            is $res->code, 200 or diag $res->content;
             done_testing;
         }
     };

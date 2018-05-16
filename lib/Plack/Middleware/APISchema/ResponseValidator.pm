@@ -2,7 +2,7 @@ package Plack::Middleware::APISchema::ResponseValidator;
 use strict;
 use warnings;
 
-use parent qw(Plack::Middleware);
+use parent qw(Plack::Middleware APISchema::HasSchema);
 use Plack::Util ();
 use Plack::Util::Accessor qw(schema validator);
 use Plack::Response;
@@ -18,7 +18,9 @@ sub call {
     Plack::Util::response_cb($self->app->($env), sub {
         my $res = shift;
 
-        my ($matched, $route) = $self->router->routematch($env);
+        my $schema = $self->prepare_schema($env);
+
+        my ($matched, $route) = $self->router($schema)->routematch($env);
         $matched or return;
 
         my $plack_res = Plack::Response->new(@$res);
@@ -37,7 +39,7 @@ sub call {
             } $plack_res->headers->header_field_names },
             body => $body,
             content_type => scalar $plack_res->content_type,
-        }, $self->schema);
+        }, $schema);
 
         my $errors = $result->errors;
         if (scalar keys %$errors) {
@@ -55,13 +57,10 @@ sub call {
 }
 
 sub router {
-    my ($self) = @_;
+    my ($self, $schema) = @_;
 
-    $self->{router} //= do {
-        my $generator = APISchema::Generator::Router::Simple->new;
-        $generator->generate_router($self->schema);
-    };
+    my $generator = APISchema::Generator::Router::Simple->new;
+    $generator->generate_router($schema);
 }
-
 
 1;
