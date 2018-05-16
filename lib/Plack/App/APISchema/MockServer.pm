@@ -1,7 +1,7 @@
 package Plack::App::APISchema::MockServer;
 use strict;
 use warnings;
-use parent qw(Plack::Component);
+use parent qw(Plack::Component APISchema::HasSchema);
 use Plack::Util::Accessor qw(schema);
 use Plack::Request;
 use Encode qw(encode_utf8);
@@ -15,17 +15,19 @@ use APISchema::Generator::Markdown::ExampleFormatter;
 sub call {
     my ($self, $env) = @_;
 
+    my $schema = $self->prepare_schema($env);
+
     my $req = Plack::Request->new($env);
 
-    my ($matched, $router_simple_route) = $self->router->routematch($env);
+    my ($matched, $router_simple_route) = $self->router($schema)->routematch($env);
 
     unless ($matched) {
         return [404, ['Content-Type' => 'text/plain; charset=utf-8'], ['not found']];
     }
 
-    my $root = $self->schema->get_resource_root;
+    my $root = $schema->get_resource_root;
 
-    my $route = $self->schema->get_route_by_name($router_simple_route->name);
+    my $route = $schema->get_route_by_name($router_simple_route->name);
 
     my $default_code = $route->default_responsible_code;
     my $response_resource = $route->canonical_response_resource($root, [
@@ -45,12 +47,10 @@ sub call {
 }
 
 sub router {
-    my ($self) = @_;
-
-    return $self->{router} if $self->{router};
+    my ($self, $schema) = @_;
 
     my $generator = APISchema::Generator::Router::Simple->new;
-    $self->{router} = $generator->generate_router($self->schema);
+    $generator->generate_router($schema);
 }
 
 1;

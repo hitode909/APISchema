@@ -17,7 +17,7 @@ sub instantiate : Tests {
 
     isa_ok $app, 'Plack::App::APISchema::MockServer';
     is $app->schema, $schema;
-    isa_ok $app->router, 'Router::Simple';
+    isa_ok $app->router($schema), 'Router::Simple';
 }
 
 sub serve_document_bmi : Tests {

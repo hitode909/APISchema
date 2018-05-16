@@ -1,7 +1,7 @@
 package Plack::App::APISchema::Document;
 use strict;
 use warnings;
-use parent qw(Plack::Component);
+use parent qw(Plack::Component APISchema::HasSchema);
 use Plack::Util::Accessor qw(schema);
 use Text::Markdown::Hoedown qw(markdown);
 use Text::MicroTemplate qw(encoded_string);
@@ -13,8 +13,9 @@ use APISchema::Generator::Markdown;
 sub call {
     my ($self, $env) = @_;
 
+    my $schema = $self->prepare_schema($env);
     my $generator = APISchema::Generator::Markdown->new;
-    my $markdown = $generator->format_schema($self->schema);
+    my $markdown = $generator->format_schema($schema);
 
     my $body = markdown(
         $markdown,
@@ -28,7 +29,7 @@ sub call {
     );
 
     my $renderer = Text::MicroTemplate::DataSection->new(package => ref $self);
-    my $title = $self->schema->title || '';
+    my $title = $schema->title || '';
     my $html = $renderer->render_mt('template.mt', $title, $body);
 
     return [200, ['Content-Type' => 'text/html; charset=utf-8'], [encode_utf8 $html]];
