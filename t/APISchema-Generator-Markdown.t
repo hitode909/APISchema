@@ -27,8 +27,8 @@ sub generate : Tests {
         like $markdown, qr{# BMI API};
         like $markdown, qr{^\Q    - [BMI API](#route-BMI%20API) - `POST` /bmi\E$}m;
         like $markdown, qr!{"height":1.6,"weight":50}!;
-        like $markdown, qr!|`.` |`object` | | |`required["value"]` |Body mass index |!;
-        like $markdown, qr!|`.height` |`number` | |`1.6` | |Height(m) |!;
+        like $markdown, qr!\Q|`.` |`object` | | |`required["value"]` |Body mass index |\E!;
+        like $markdown, qr!\Q|`.height` |`number` | |`1.6` | |Height(m) |\E!;
     };
 
     subtest 'Complex' => sub {
@@ -46,7 +46,7 @@ sub generate : Tests {
 |`.[]` |[`person`](#resource-person) | | | |A person |
 EOS
         like $markdown, qr!\Q$text1\E!;
-        like $markdown, qr!|`.\[\]` |[`person`](#resource-person) | | | | |!;
+        like $markdown, qr!\Q|`.[]` |[`person`](#resource-person) | | | |A person |\E!;
         my $text2 = <<EOS;
 200 OK
 [{"age":16,"name":"Alice"},{"age":14,"name":"Charlie"}]
